@@ -69,7 +69,6 @@ const renderData = data => {
   const table = document.querySelector("table");
   table.style.display = "grid";
 
-  var dog;
   // prettier-ignore
   const result = `
     <ul>
