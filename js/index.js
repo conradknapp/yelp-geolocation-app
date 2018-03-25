@@ -1,30 +1,56 @@
-const form = document.forms["food-form"];
-const btn = document.querySelector("button");
-const title = document.querySelector(".title");
+"use strict";
 
-btn.addEventListener("click", () => getLocation());
+var form = document.forms["food-form"];
+var coordsBtn = document.querySelector("button[name='coords']");
+var title = document.querySelector(".title");
+var watchID;
+var timer;
+
+coordsBtn.addEventListener("click", function() {
+  getLocation();
+});
 
 // gets user location
-const getLocation = () => {
-  if ("geolocation" in navigator) {
-    navigator.geolocation.getCurrentPosition(showPosition);
-  } else {
-    title.innerText = "Geolocation is not supported by this browser.";
-    return;
+var getLocation = () => {
+  coordsBtn.innerText = "Getting location...";
+  timer = setTimeout(() => {
+    coordsBtn.style.color = "teal";
+    coordsBtn.innerText = "Almost there...";
+  }, 5000);
+  var geoError = function() {
+    coordsBtn.style.background = "red";
+    coordsBtn.style.color = "white";
+    coordsBtn.innerText = "Fetch timed out";
+  };
+
+  var geoOptions = {
+    enableHighAccuracy: true,
+    maximumAge: 30000,
+    timeout: 27000
+  };
+
+  navigator.geolocation.getCurrentPosition(showPosition, geoError, geoOptions);
+
+  if (!navigator.geolocation) {
+    title.innerText = `Results can't be fetched`;
   }
 };
 
-// injects lat/long into input fields
-const showPosition = position => {
+// inserts computed lat/long (from geolocation API) into input fields
+var showPosition = position => {
   form.elements["latitude"].value = position.coords.latitude;
   form.elements["longitude"].value = position.coords.longitude;
+  coordsBtn.style.background = "green";
+  coordsBtn.style.color = "white";
+  coordsBtn.innerText = "Success!";
+  clearTimeout(timer);
 
   position ? addTextDiv() : null;
 };
 
 // renders input, prompts user for food query
-const addTextDiv = () => {
-  title.innerText = "What food would you like?";
+var addTextDiv = () => {
+  title.innerText = "Now, what food would you like?";
   form.elements["term"].style.display = "block";
 };
 
@@ -34,10 +60,10 @@ form.elements["term"].addEventListener("keyup", () => {
 });
 
 // send ajax request to server with form data --> server makes subsequent req to Yelp --> server gives us response
-form.addEventListener("submit", e => {
-  e.preventDefault();
+form.addEventListener("submit", event => {
+  event.preventDefault();
 
-  fetch("http://localhost:3000/", {
+  fetch("http://localhost:3000/api/yelp", {
     method: "POST",
     headers: {
       Accept: "application/json",
@@ -50,27 +76,30 @@ form.addEventListener("submit", e => {
     })
   })
     .then(res => res.json())
-    .then(data => renderData(data))
+    .then(data => {
+      title.innerText = "Here are the restaurants closest to you";
+      renderData(data);
+    })
     .catch(err => console.error(err));
 });
 
 // helper function for restaurant distance unit conversions
-const convertMeters = (conversion, abbrev) => meters =>
+var convertMeters = (conversion, abbrev) => meters =>
   `${(meters / conversion).toFixed(2)} ${abbrev}`;
 
-const metersToMiles = convertMeters(1609.34, "miles");
-const metersToKilometers = convertMeters(1000, "km");
+var metersToMiles = convertMeters(1609.34, "miles");
+var metersToKilometers = convertMeters(1000, "km");
 
 // pass JSON data to our render function, which maps over destructured results
-const renderData = data => {
-  const resultsDiv = document.querySelector(".results");
+var renderData = data => {
+  var resultsDiv = document.querySelector(".results");
   console.log(data);
 
-  const table = document.querySelector("table");
+  var table = document.querySelector("table");
   table.style.display = "grid";
 
   // prettier-ignore
-  const result = `
+  var result = `
     <ul>
       ${data.businesses.map(({ name, url, price, distance }) => 
        `<li class="list-item">

@@ -20,7 +20,7 @@ app.get("/", (req, res) => {
   res.render("index");
 });
 
-app.post("/", async ({ body: { term, latitude, longitude } }, res) => {
+app.post("/api/yelp", async ({ body: { term, latitude, longitude } }, res) => {
   axios.defaults.headers.common["Authorization"] = `Bearer ${API_KEY}`;
 
   const { data } = await axios.get(

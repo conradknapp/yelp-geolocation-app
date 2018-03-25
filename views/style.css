@@ -1,8 +1,12 @@
 /* Reset */
 
-html {
+html, body {
+  font-family: 'Gill Sans', 'Gill Sans MT', Calibri, 'Trebuchet MS', sans-serif;
   box-sizing: border-box;
   font-size: 16px;
+  background-image: url(https://images.pexels.com/photos/717130/pexels-photo-717130.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940);
+  background-position: 50% 60%; 
+  background-repeat: no-repeat;
 }
 
 *,
@@ -38,40 +42,98 @@ img {
 
 /* index.pug */
 
-body {
-  font-size: 24px;
-}
-
 .container {
   margin: 3rem;
+  padding: 3rem 2rem;
   text-align: center;
+  background: #ddd;
+  border-radius: 15px;
+  opacity: 0.9;
+  transform: translateY(50%);
+  animation: slideUp 0.8s ease-in-out forwards;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20%);
+  }
+
+  to {
+    opacity: 0.8;
+    transform: translateY(0%);
+  }
+}
+
+.form-container {
+  display: grid;
+  margin: 0 auto;
+  width: 80%;
+}
+
+.title {
+  color: rgb(204, 97, 10);
+  margin-bottom: 0.5em;
+  transition: all 0.2s ease;
+}
+
+button {
+  padding: 0.2em 0.5em;
+  font-size: 1.5rem;
+  cursor: pointer;
 }
 
 form {
-  display: grid;
-  grid-template-columns: 1fr;
-  width: 20vw;
-  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 }
 
-input,
-button {
-  font-size: 1rem;
+input {
+  font-size: 1.5rem;
+  padding: 0.2em;
 }
 
 input[name="term"],
 button[type="submit"] {
   display: none;
+  transform-origin: top center;
+  animation: unfurl 600ms ease-in-out forwards;
 }
+
+@keyframes unfurl {
+  0% {
+    opacity: 0;
+    display: block;
+    transform: rotateX(-90deg);
+  }
+  100% {
+    opacity: 1;
+    transform: rotateX(0deg);
+  }
+}
+
+/* Results */
+
 
 table {
   display: none;
   width: 100%;
 }
 
+a, span {
+  font-size: 1.2rem;
+}
+
+th {
+  font-size: 1.5rem;
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+}
+
 li,
 tr {
   width: 100%;
   display: grid;
-  grid-template-columns: 3fr 1fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr;
 }

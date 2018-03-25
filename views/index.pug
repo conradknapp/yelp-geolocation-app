@@ -8,13 +8,14 @@ html(lang='en')
     title Document
   body
     .container
-      h1.title Click to Get Your Location
-      form(name='food-form')
-        button Get Coordinates
-        input(placeholder='latitude', name='latitude', type='text')
-        input(placeholder='longitude', name='longitude', type='text')
-        input(placeholder='Type of food', name='term', type='text')
-        button(type='submit', value='Submit') Submit
+      h1.title First, Click to Get Your Location
+      .form-container
+        button(name="coords") Get Coordinates
+        form(name='food-form')
+          input(placeholder='latitude', name='latitude', type='text')
+          input(placeholder='longitude', name='longitude', type='text')
+          input(placeholder='Type of food', name='term', type='text')
+          button(type='submit', value='Submit') Submit
       table.results-table
         tr
           th Restaurant
